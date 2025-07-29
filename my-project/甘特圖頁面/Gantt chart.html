@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .gantt-bar {
+        background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+        border-radius: 20px;
+      }
+      .gantt-bar-orange {
+        background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+        border-radius: 20px;
+      }
+      .sphere {
+        background: linear-gradient(
+          135deg,
+          #60a5fa 0%,
+          #3b82f6 50%,
+          #1e40af 100%
+        );
+        border-radius: 50%;
+        position: relative;
+      }
+      .sphere::before {
+        content: "";
+        position: absolute;
+        top: 20%;
+        left: 25%;
+        width: 35%;
+        height: 35%;
+        background: rgba(255, 255, 255, 0.4);
+        border-radius: 50%;
+        filter: blur(1px);
+      }
+      .card-placeholder {
+        background: #c4c4c4;
+        border-radius: 12px;
+        aspect-ratio: 4/3;
+      }
+      .subject-button {
+        background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+        border-radius: 25px;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+      }
+      .arrow-button {
+        background: linear-gradient(135deg, #fcd34d 0%, #f59e0b 100%);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+      }
+      .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        position: relative;
+      }
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 100%;
+        background-color: white;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        min-width: 8rem;
+        z-index: 50;
+      }
+
+      .dropdown-menu.show {
+        display: block;
+      }
+
+      .dropdown-item {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        color: #374151; /* gray-700 */
+        font-size: 0.875rem;
+      }
+
+      .dropdown-item:hover {
+        background-color: #f3f4f6; /* gray-100 */
+      }
+
+      .user-profile {
+        position: relative;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-200 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold text-gray-800">SmartLearn</h1>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a
+          href="plan.html"
+          class="px-3 py-2 text-gray-600 font-medium flex items-center hover:bg-gray-300 rounded"
+        >
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.811-.46l-3.736.934 1.04-3.9A7.963 7.963 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"
+            ></path>
+          </svg>
+          行事曆
+        </a>
+
+        <a
+          href="note.html"
+          class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded inline-block"
+        >
+          學習筆記
+        </a>
+        <div class="relative">
+          <button
+            id="progressBtn"
+            class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded flex items-center"
+          >
+            學習進度
+            <svg
+              class="w-4 h-4 ml-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <div
+            id="progressDropdown"
+            class="absolute right-0 mt-1 w-40 bg-white rounded shadow-lg hidden z-50"
+          >
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >法文</a
+            >
+          </div>
+        </div>
+        <a
+          href="test.html"
+          class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded"
+        >
+          學習測驗
+        </a>
+        <div class="user-profile">
+          <button
+            class="profile-button px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded"
+          >
+            👤
+          </button>
+          <div class="dropdown-menu">
+            <div class="dropdown-item">個人資料</div>
+            <div class="dropdown-item">設定</div>
+            <div class="dropdown-item">說明</div>
+            <div class="dropdown-item">登出</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+      <div class="mb-4 flex gap-2">
+        <input
+          id="newCardInput"
+          type="text"
+          placeholder="輸入卡片名稱"
+          class="border border-gray-300 rounded px-4 py-2 w-64"
+        />
+        <button
+          id="addCardBtn"
+          class="bg-yellow-400 hover:bg-yellow-500 text-white font-bold px-4 py-2 rounded"
+        >
+          新增卡片
+        </button>
+      </div>
+
+      <!-- 卡片區塊 -->
+      <div id="cardGrid" class="grid grid-cols-3 gap-6"></div>
+
+      <!-- 左右箭頭 -->
+      <div id="prevPage" class="arrow-button" style="left: -60px">
+        <svg
+          class="w-4 h-4 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </div>
+      <div id="nextPage" class="arrow-button" style="right: -60px">
+        <svg
+          class="w-4 h-4 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="3"
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <script src="Gantt chart.js"></script>
+  </body>
+</html>

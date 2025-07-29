@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartLearn - 行事曆</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-200 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center">
+        <h1 class="text-xl font-bold text-gray-800">SmartLearn</h1>
+      </div>
+      <div class="flex items-center space-x-6">
+        <a
+          href="plan.html"
+          class="px-3 py-2 text-gray-600 font-medium flex items-center hover:bg-gray-300 rounded"
+        >
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.811-.46l-3.736.934 1.04-3.9A7.963 7.963 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"
+            ></path>
+          </svg>
+          行事曆
+        </a>
+
+        <a
+          href="note.html"
+          class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded inline-block"
+        >
+          學習筆記
+        </a>
+        <div class="relative">
+          <button
+            id="progressBtn"
+            class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded flex items-center"
+          >
+            學習進度
+            <svg
+              class="w-4 h-4 ml-1"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+          <div
+            id="progressDropdown"
+            class="absolute right-0 mt-1 w-40 bg-white rounded shadow-lg hidden z-50"
+          >
+            <a
+              href="#"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+              >法文</a
+            >
+          </div>
+        </div>
+        <a
+          href="test.html"
+          class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded"
+        >
+          學習測驗
+        </a>
+        <div class="flex items-center">
+          <div
+            class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+          <svg
+            class="w-4 h-4 ml-1 text-gray-600"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+      </div>
+    </header>
+    <!-- Header 略 (與你的一樣) -->
+
+    <main class="max-w-6xl mx-auto px-6 py-8">
+      <!-- Calendar Header -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex items-center justify-between mb-6">
+          <button id="prevBtn" class="p-2 hover:bg-gray-100 rounded">
+            <svg
+              class="w-6 h-6 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+          <h2 id="calendarTitle" class="text-2xl font-bold text-gray-900">
+            2025年 五月
+          </h2>
+          <button id="nextBtn" class="p-2 hover:bg-gray-100 rounded">
+            <svg
+              class="w-6 h-6 text-gray-600"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div
+          class="grid grid-cols-7 text-center font-medium text-gray-500 mb-2"
+        >
+          <div>日</div>
+          <div>一</div>
+          <div>二</div>
+          <div>三</div>
+          <div>四</div>
+          <div>五</div>
+          <div>六</div>
+        </div>
+        <div
+          id="calendar-grid"
+          class="grid grid-cols-7 gap-2 text-center text-sm"
+        ></div>
+      </div>
+      <!-- To-Do Section -->
+      <div class="bg-white rounded-lg shadow-sm p-6 mt-4">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4">📌 代辦事項</h3>
+
+        <!-- 輸入區 -->
+        <div class="flex items-center mb-4 gap-2">
+          <input
+            id="todoInput"
+            type="text"
+            placeholder="輸入代辦事項..."
+            class="flex-grow border border-gray-300 rounded px-4 py-2"
+          />
+          <button
+            id="addTodoBtn"
+            class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold px-4 py-2 rounded"
+          >
+            新增
+          </button>
+        </div>
+
+        <!-- 清單區 -->
+        <ul id="todoList" class="space-y-2 text-gray-800"></ul>
+      </div>
+    </main>
+    <script src="plan.js"></script>
+  </body>
+</html>
