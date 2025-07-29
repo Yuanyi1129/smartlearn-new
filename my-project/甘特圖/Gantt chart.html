@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartLearn</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .gantt-bar {
+            background: linear-gradient(90deg, #3B82F6 0%, #60A5FA 100%);
+            border-radius: 20px;
+        }
+        .gantt-bar-orange {
+            background: linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%);
+            border-radius: 20px;
+        }
+        .sphere {
+            background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #1E40AF 100%);
+            border-radius: 50%;
+            position: relative;
+        }
+        .sphere::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 25%;
+            width: 35%;
+            height: 35%;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+        .card-placeholder {
+            background: #C4C4C4;
+            border-radius: 12px;
+            aspect-ratio: 4/3;
+        }
+        .subject-button {
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+        }
+        .arrow-button {
+            background: linear-gradient(135deg, #FCD34D 0%, #F59E0B 100%);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .subject-controls {
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Header -->
+    <header class="bg-gray-200 px-6 py-3 flex items-center justify-between">
+        <div class="flex items-center">
+            <h1 class="text-xl font-bold text-gray-800">SmartLearn</h1>
+        </div>
+        <div class="flex items-center space-x-6">
+            <button class="px-3 py-2 text-gray-600 font-medium flex items-center hover:bg-gray-300 rounded">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.955 8.955 0 01-2.811-.46l-3.736.934 1.04-3.9A7.963 7.963 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"></path>
+                </svg>
+                行事曆
+            </button>
+            <button class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded">學習筆記</button>
+            <button class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded">學習進度</button>
+            <button class="px-3 py-2 text-gray-600 font-medium hover:bg-gray-300 rounded">學習測驗</button>
+            <div class="flex items-center">
+                <div class="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <svg class="w-4 h-4 ml-1 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- 6 Cards Grid (3x2) with Subject Selection -->
+        <div class="grid grid-cols-3 gap-6 relative">
+            <!-- First card with Gantt Chart -->
+            <div class="relative">
+                <div class="bg-white rounded-xl shadow-sm aspect-[4/3] p-4">
+                    <div class="flex items-start h-full">
+                        <div class="flex-1">
+                            <!-- Date headers -->
+                            <div class="flex text-xs text-gray-500 mb-2">
+                                <span class="w-4 text-center">15</span>
+                                <span class="w-4 text-center">16</span>
+                                <span class="w-4 text-center">17</span>
+                                <span class="w-4 text-center">18</span>
+                                <span class="w-4 text-center">19</span>
+                                <span class="w-4 text-center">20</span>
+                                <span class="w-4 text-center">21</span>
+                                <span class="w-4 text-center">22</span>
+                                <span class="w-4 text-center">23</span>
+                                <span class="w-4 text-center">24</span>
+                                <span class="w-4 text-center">25</span>
+                                <span class="w-4 text-center">26</span>
+                            </div>
+                            <!-- Gantt bars -->
+                            <div class="space-y-1">
+                                <div class="gantt-bar h-2" style="width: 60px;"></div>
+                                <div class="gantt-bar-orange h-1.5" style="width: 40px; margin-left: 80px;"></div>
+                                <div class="gantt-bar-orange h-1.5" style="width: 50px; margin-left: 40px;"></div>
+                                <div class="gantt-bar-orange h-1.5" style="width: 60px; margin-left: 60px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+            <div class="card-placeholder"></div>
+
+            <!-- Left Arrow - 左側 -->
+            <div class="arrow-button" style="position: absolute; top: 50%; left: -60px; transform: translateY(-50%);">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"></path>
+                </svg>
+            </div>
+            
+            <!-- Right Arrow - 右側 -->
+            <div class="arrow-button" style="position: absolute; top: 50%; right: -60px; transform: translateY(-50%);">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
+                </svg>
+            </div>
+            
+            <!-- Subject Button - 在第一個卡片正下方 -->
+            <div style="position: absolute; top: 33%; left: 16.67%; transform: translate(-50%, 20px);">
+                <button class="subject-button px-8 py-2 text-white font-bold text-lg">
+                    數學
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 科目切換功能
+        const subjects = ['數學', '英文', '物理', '化學', '歷史', '地理'];
+        let currentIndex = 0;
+        const subjectButton = document.querySelector('.subject-button');
+        const arrowButtons = document.querySelectorAll('.arrow-button');
+        
+        arrowButtons.forEach((button, index) => {
+            button.addEventListener('click', function() {
+                if (index === 0) { // 左箭頭
+                    currentIndex = (currentIndex - 1 + subjects.length) % subjects.length;
+                } else { // 右箭頭
+                    currentIndex = (currentIndex + 1) % subjects.length;
+                }
+                subjectButton.textContent = subjects[currentIndex];
+            });
+        });
+    </script>
+</body>
+</html>

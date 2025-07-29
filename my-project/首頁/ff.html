@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartLearn</title>
+    <style>
+        * {margin: 0; padding: 0; box-sizing: border-box;}
+        body {font-family: 'Microsoft JhengHei', sans-serif; background-color: #f0f0f0; padding: 20px;}
+        .container {max-width: 1200px; margin: 0 auto; background-color: #e8e8e8; border-radius: 15px; padding: 20px; position: relative; min-height: 100vh;}
+        .header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;}
+        .logo {font-size: 24px; font-weight: bold; color: #333; cursor: pointer; padding: 10px 15px; border-radius: 8px; transition: all 0.3s ease; border: none; background: none;}
+        .logo:hover {background-color: rgba(0,0,0,0.05); transform: translateY(-1px);}
+        .nav-menu {display: flex; gap: 15px; align-items: center; margin-left: auto; margin-right: 50px;}
+        .nav-item {color: #333; text-decoration: none; font-weight: 500; padding: 8px 15px; border-radius: 8px; transition: background-color 0.3s;}
+        .nav-item:hover {background-color: rgba(0,0,0,0.1);}
+        .user-profile {position: relative;}
+        .profile-button {width: 40px; height: 40px; border-radius: 50%; background-color: #999; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; border: none; transition: background-color 0.3s;}
+        .profile-button:hover {background-color: #777;}
+        .dropdown-menu {position: absolute; top: 50px; right: 0; background-color: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); min-width: 150px; z-index: 1000; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease;}
+        .dropdown-menu.show {opacity: 1; visibility: visible; transform: translateY(0);}
+        .dropdown-item {padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background-color 0.3s;}
+        .dropdown-item:hover {background-color: #f5f5f5;}
+        .dropdown-item:last-child {border-bottom: none;}
+        .main-content {display: grid; grid-template-columns: 180px 1fr 320px; gap: 30px; align-items: start; min-height: calc(100vh - 200px);}
+        .left-sidebar {position: relative; height: 100%;}
+        .class-card {background-color: white; border-radius: 15px; padding: 30px 20px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px; min-height: 180px; display: flex; flex-direction: column; justify-content: center;}
+        .shop-button {position: absolute; bottom: 20px; left: 20px; background-color: #FF6B35; color: white; border: none; border-radius: 12px; padding: 15px 20px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; gap: 8px; z-index: 100;}
+        .shop-button:hover {background-color: #E55A2B; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15);}
+        .shop-button:active {transform: translateY(0);}
+        .class-icon {width: 60px; height: 60px; border-radius: 50%; background-color: #f0f0f0; border: 3px solid #ddd; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #666; font-size: 14px;}
+        .class-progress {margin-top: 15px;}
+        .progress-text {font-size: 16px; color: #666; margin-bottom: 15px; font-weight: 500;}
+        .progress-bar {display: flex; gap: 5px; justify-content: center; margin-bottom: 10px;}
+        .progress-dot {width: 14px; height: 14px; border-radius: 50%; background-color: #ddd;}
+        .progress-dot.active {background-color: #4CAF50;}
+        .progress-label {font-size: 13px; color: #999; margin-top: 5px;}
+        .center-content {display: flex; flex-direction: column; gap: 20px; height: 100%;}
+        .game-banner {background: linear-gradient(45deg, #8B4513, #D2B48C); border-radius: 15px; padding: 20px; display: flex; align-items: center; justify-content: space-between; color: white; min-height: 80px;}
+        .game-character {width: 50px; height: 50px; background-color: #D2691E; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px;}
+        .bananas {display: flex; gap: 10px;}
+        .banana {width: 30px; height: 40px; background-color: #FFD700; border-radius: 15px 15px 5px 5px; position: relative;}
+        .banana::before {content: ''; position: absolute; top: -5px; left: 50%; transform: translateX(-50%); width: 8px; height: 10px; background-color: #8B4513; border-radius: 2px;}
+        .calendar {background-color: white; border-radius: 15px; padding: 25px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); flex: 1; display: flex; flex-direction: column;}
+        .calendar-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;}
+        .calendar-nav {background: none; border: none; font-size: 24px; cursor: pointer; padding: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;}
+        .calendar-nav:hover {background-color: #f0f0f0;}
+        .calendar-title {font-size: 22px; font-weight: bold; color: #333;}
+        .calendar-grid {display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; text-align: center; flex: 1;}
+        .calendar-day-header {font-weight: bold; color: #666; padding: 15px 0; font-size: 16px;}
+        .calendar-day {padding: 15px 8px; border-radius: 10px; cursor: pointer; transition: background-color 0.3s; font-size: 16px; display: flex; align-items: center; justify-content: center; min-height: 45px;}
+        .calendar-day:hover {background-color: #f0f0f0;}
+        .calendar-day.today {background-color: #4CAF50; color: white;}
+        .calendar-day.selected {background-color: #2196F3; color: white;}
+        .calendar-day.next-month {color: #ccc;}
+        .right-sidebar {display: flex; flex-direction: column; gap: 20px; height: 100%;}
+        .widget {background-color: white; border-radius: 15px; padding: 35px; flex: 1; box-shadow: 0 4px 8px rgba(0,0,0,0.1); display: flex; align-items: center; justify-content: center; min-height: 150px;}
+        .widget:last-child {position: relative;}
+        .more-button {position: absolute; bottom: 20px; right: 20px; background-color: white; border: none; border-radius: 8px; padding: 12px 16px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: all 0.3s ease; z-index: 100;}
+        .more-button:hover {box-shadow: 0 4px 12px rgba(0,0,0,0.15); transform: translateY(-2px);}
+        .menu-dots {font-size: 20px; color: #666;}
+        .tour-highlight {box-shadow: 0 0 0 5px #2196F3, 0 8px 36px rgba(33,150,243,0.19) !important; transition: box-shadow 0.25s; z-index: 10002 !important;}
+        /* 新手導覽遮罩+卡片 */
+        #tour-mask {display:none; position:fixed; z-index:2000; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.45);}
+        #tour-card {display:none; position:fixed; top:10vh; left:50%; transform:translateX(-50%); min-width:260px; max-width:360px; background:#fff; padding:28px 24px 18px 24px; border-radius:14px; box-shadow:0 6px 32px rgba(0,0,0,0.20); z-index:2200;}
+        #tour-step-title {font-size:20px; font-weight:bold; margin-bottom:8px;}
+        #tour-step-text {color:#666; font-size:15px;}
+        #tour-card-btns {margin-top:18px; text-align:right;}
+        #tour-trigger {position:fixed; bottom:32px; right:32px; z-index:100; padding:11px 18px; background:#2196F3; color:#fff; font-size:15px; border-radius:24px; border:none; box-shadow:0 2px 12px rgba(0,0,0,0.18); cursor:pointer;}
+        @media (max-width: 768px) {
+            .main-content {grid-template-columns: 1fr; gap: 20px;}
+            .nav-menu {display: none;}
+            #tour-card {min-width:170px; max-width:95vw; font-size:14px;}
+            #tour-trigger {right:12px; bottom:12px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button class="logo" onclick="window.location.reload()">SmartLearn</button>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item">行事曆</a>
+                <a href="#" class="nav-item">學習筆記</a>
+                <a href="#" class="nav-item">學習進度</a>
+                <a href="#" class="nav-item">學習測驗</a>
+            </nav>
+            <div class="user-profile">
+                <button class="profile-button">👤</button>
+                <div class="dropdown-menu">
+                    <div class="dropdown-item">個人資料</div>
+                    <div class="dropdown-item">設定</div>
+                    <div class="dropdown-item">說明</div>
+                    <div class="dropdown-item">登出</div>
+                </div>
+            </div>
+        </header>
+        <main class="main-content">
+            <aside class="left-sidebar">
+                <div class="class-card">
+                    <div class="class-icon">Class A</div>
+                    <div class="class-progress">
+                        <div class="progress-text">好友列表</div>
+                        <div class="progress-bar">
+                            <div class="progress-dot active"></div>
+                            <div class="progress-dot active"></div>
+                            <div class="progress-dot active"></div>
+                            <div class="progress-dot"></div>
+                            <div class="progress-dot"></div>
+                        </div>
+                        <div class="progress-label">Progress</div>
+                    </div>
+                </div>
+                <button class="shop-button">🛒 商店</button>
+            </aside>
+            <section class="center-content">
+                <div class="game-banner">
+                    <div class="game-character">🐵</div>
+                    <div class="bananas">
+                        <div class="banana"></div>
+                        <div class="banana"></div>
+                        <div class="banana"></div>
+                        <div class="banana"></div>
+                    </div>
+                </div>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="calendar-nav">‹</button>
+                        <div class="calendar-title">2025年 五月</div>
+                        <button class="calendar-nav">›</button>
+                    </div>
+                    <div class="calendar-grid"></div>
+                </div>
+            </section>
+            <aside class="right-sidebar">
+                <div class="widget"></div>
+                <div class="widget"></div>
+                <div class="widget">
+                    <button class="more-button"><div class="menu-dots">⋯</div></button>
+                </div>
+            </aside>
+        </main>
+    </div>
+    <!-- 導覽遮罩與卡片 -->
+    <div id="tour-mask"></div>
+    <div id="tour-card">
+      <div id="tour-step-title"></div>
+      <div id="tour-step-text"></div>
+      <div id="tour-card-btns">
+        <button id="tour-prev-btn" style="margin-right:8px;display:none;">上一步</button>
+        <button id="tour-next-btn">下一步</button>
+        <button id="tour-skip-btn" style="margin-left:8px;">跳過</button>
+      </div>
+    </div>
+    <button id="tour-trigger">新手導覽</button>
+
+    <script>
+        // 用戶下拉選單功能
+        const profileButton = document.querySelector('.profile-button');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+        profileButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+        document.addEventListener('click', () => dropdownMenu.classList.remove('show'));
+        dropdownMenu.addEventListener('click', (e) => e.stopPropagation());
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', () => dropdownMenu.classList.remove('show'));
+        });
+
+        // 日曆
+        const calendarNavs = document.querySelectorAll('.calendar-nav');
+        const calendarTitle = document.querySelector('.calendar-title');
+        const calendarGrid = document.querySelector('.calendar-grid');
+        let currentMonth = 4, currentYear = 2025;
+        const months = ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+        const weekDays = ['日','一','二','三','四','五','六'];
+        function getDaysInMonth(year, month) {return new Date(year, month + 1, 0).getDate();}
+        function getFirstDayOfMonth(year, month) {return new Date(year, month, 1).getDay();}
+        function generateCalendar() {
+            const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+            const firstDay = getFirstDayOfMonth(currentYear, currentMonth);
+            const today = new Date();
+            const isCurrentMonth = today.getFullYear() === currentYear && today.getMonth() === currentMonth;
+            const todayDate = today.getDate();
+            calendarGrid.innerHTML = '';
+            weekDays.forEach(day => {
+                const dayHeader = document.createElement('div');
+                dayHeader.className = 'calendar-day-header';
+                dayHeader.textContent = day;
+                calendarGrid.appendChild(dayHeader);
+            });
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day';
+                calendarGrid.appendChild(emptyDay);
+            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                if (isCurrentMonth && day === todayDate) dayElement.classList.add('today');
+                dayElement.addEventListener('click', () => {
+                    document.querySelectorAll('.calendar-day.selected').forEach(el => el.classList.remove('selected'));
+                    dayElement.classList.add('selected');
+                });
+                calendarGrid.appendChild(dayElement);
+            }
+            const totalCells = calendarGrid.children.length - 7;
+            const remainingCells = 42 - totalCells;
+            for (let day = 1; day <= remainingCells && remainingCells < 7; day++) {
+                const nextMonthDay = document.createElement('div');
+                nextMonthDay.className = 'calendar-day next-month';
+                nextMonthDay.textContent = day;
+                calendarGrid.appendChild(nextMonthDay);
+            }
+        }
+        function updateCalendar() {
+            calendarTitle.textContent = `${currentYear}年 ${months[currentMonth]}`;
+            generateCalendar();
+        }
+        calendarNavs[0].addEventListener('click', () => {currentMonth--; if (currentMonth < 0) {currentMonth = 11; currentYear--;} updateCalendar();});
+        calendarNavs[1].addEventListener('click', () => {currentMonth++; if (currentMonth > 11) {currentMonth = 0; currentYear++;} updateCalendar();});
+        updateCalendar();
+
+        // 商店與更多按鈕
+        document.querySelector('.shop-button').addEventListener('click', () => {});
+        document.querySelector('.more-button').addEventListener('click', () => {});
+        document.querySelector('.class-card').addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {this.style.transform = 'scale(1)';}, 100);
+        });
+
+        // ============ 新手導覽 =============
+        const tourSteps = [
+          { selector: '.class-card', title: '步驟1', text: '這裡是你的「好友與班級列表」。<br>隨時追蹤好友學習進度，互相激勵。' },
+          { selector: '.shop-button', title: '步驟2', text: '這裡是「Smart商店」！<br>可用學習幣兌換有趣道具和個人化外觀。' },
+          { selector: '.calendar', title: '步驟3', text: '這裡是「行事曆」和你的總體學習進度。<br>每天的任務都在這裡一目了然。' },
+          { selector: '.widget:first-child', title: '步驟4', text: '這裡是「近期常學科目進度」。<br>三大科目的甘特圖，讓你重點追蹤進展。' },
+          { selector: '.more-button', title: '步驟5', text: '點這裡可前往所有科目的詳細甘特圖，完整管理你的學習計畫。' },
+          { selector: '.header', title: '步驟6', text: '右上角為「個人選單」與各功能頁籤，包含學習筆記、進度檢視與測驗。' }
+        ];
+        let tourStepIndex = 0;
+        const mask = document.getElementById('tour-mask');
+        const card = document.getElementById('tour-card');
+        const titleEl = document.getElementById('tour-step-title');
+        const textEl = document.getElementById('tour-step-text');
+        const prevBtn = document.getElementById('tour-prev-btn');
+        const nextBtn = document.getElementById('tour-next-btn');
+        const skipBtn = document.getElementById('tour-skip-btn');
+        const triggerBtn = document.getElementById('tour-trigger');
+        function showTourStep(idx) {
+          const step = tourSteps[idx];
+          document.querySelectorAll('.tour-highlight').forEach(el => {
+            el.classList.remove('tour-highlight');
+            el.style.boxShadow = '';
+            el.style.zIndex = '';
+          });
+          const el = document.querySelector(step.selector);
+          if (el) {
+            el.classList.add('tour-highlight');
+            el.style.zIndex = 10002;
+          }
+          titleEl.innerText = step.title;
+          textEl.innerHTML = step.text;
+          prevBtn.style.display = idx === 0 ? 'none' : '';
+          nextBtn.innerText = (idx === tourSteps.length - 1) ? '完成' : '下一步';
+        }
+        function openTour(idx = 0) {
+          tourStepIndex = idx;
+          mask.style.display = 'block';
+          card.style.display = 'block';
+          showTourStep(tourStepIndex);
+        }
+        function closeTour() {
+          mask.style.display = 'none';
+          card.style.display = 'none';
+          document.querySelectorAll('.tour-highlight').forEach(el => {
+            el.classList.remove('tour-highlight');
+            el.style.boxShadow = '';
+            el.style.zIndex = '';
+          });
+        }
+        nextBtn.onclick = () => {
+          if (tourStepIndex < tourSteps.length - 1) {
+            tourStepIndex++;
+            showTourStep(tourStepIndex);
+          } else {
+            closeTour();
+          }
+        };
+        prevBtn.onclick = () => {
+          if (tourStepIndex > 0) {
+            tourStepIndex--;
+            showTourStep(tourStepIndex);
+          }
+        };
+        skipBtn.onclick = closeTour;
+        mask.onclick = closeTour;
+        triggerBtn.onclick = () => openTour(0);
+
+        // 初次自動導覽（只顯示一次）
+        window.onload = () => {
+          if (!localStorage.getItem('hasShownTour')) {
+            setTimeout(() => {
+              openTour(0);
+              localStorage.setItem('hasShownTour', '1');
+            }, 600);
+          }
+        };
+    </script>
+</body>
+</html>
