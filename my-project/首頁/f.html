@@ -261,6 +261,7 @@
         }
         
         .progress-section {
+            /* 你原本的 display: flex 不變 */
             display: flex;
             align-items: center;
             gap: 20px;
@@ -269,20 +270,28 @@
         .game-character {
             width: 48px;
             height: 48px;
-            background-image: url('./monkey.jpg'); /* 替換為實際猴子圖片路徑 */
+            background-image: url('./monkey.png'); /* 替換為你的猴子圖片路徑 */
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             image-rendering: pixelated;
             image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
+            position: absolute;      /* 這行是關鍵！ */
+            top: -14px;              /* 微調讓猴子貼齊進度條，可再調整 */
+            left: 0;
+            z-index: 2;
+            transition: left 0.4s cubic-bezier(.41,.52,.32,1.18);
         }
         
+        /* 新增：讓進度條可以作為絕對定位容器 */
         .progress-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 8px;
+            position: relative; /* 這行很重要 */
+            min-height: 48px;   /* 讓猴子有空間 */
         }
         
         .progress-track {
@@ -504,12 +513,12 @@
             
             <section class="center-content">
                 <div class="game-banner">
-                    <div class="game-character"></div>
-                    <div class="progress-section">
-                        <div class="progress-container">
-                            <div class="progress-track">
-                                <div class="progress-fill"></div>
-                            </div>
+                        <div class="progress-section">
+                            <div class="progress-container">
+                                <div class="game-character"></div>
+                                <div class="progress-track">
+                                    <div class="progress-fill"></div>
+                                </div>
                             <div class="progress-text">65%</div>
                         </div>
                     </div>

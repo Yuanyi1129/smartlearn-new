@@ -141,6 +141,78 @@ calendarNavs[1].addEventListener('click', () => {
 // 初始化日曆
 updateCalendar();
 
+// 更新學習進度
+function updateProgress(percentage) {
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.game-banner .progress-text'); // 明確指定遊戲橫幅中的進度文字
+    const gameCharacter = document.querySelector('.game-character');
+    const progressContainer = document.querySelector('.progress-container');
+    
+    // 更新進度條寬度和文字
+    progressFill.style.width = percentage + '%';
+    if (progressText) {
+        progressText.textContent = percentage + '%';
+    }
+    
+    // 等待元素載入完成後計算位置
+    setTimeout(() => {
+        if (progressContainer && gameCharacter) {
+            const containerWidth = progressContainer.offsetWidth;
+            const characterWidth = 48;
+            
+            // 計算猴子應該在進度條上的位置
+            const progressPosition = (percentage / 100) * (containerWidth - characterWidth);
+            
+            gameCharacter.style.left = progressPosition + 'px';
+        }
+    }, 50);
+}
+        
+        // 更新左側班級進度（獨立函數）
+        function updateClassProgress(percentage) {
+            const classProgressText = document.querySelector('.class-card .progress-text');
+            if (classProgressText) {
+                classProgressText.textContent = ` ${percentage}%`;
+            }
+            
+            // 更新進度點
+            const progressDots = document.querySelectorAll('.class-card .progress-dot');
+            const activeDots = Math.ceil((percentage / 100) * progressDots.length);
+            
+            progressDots.forEach((dot, index) => {
+                if (index < activeDots) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+        
+        // 頁面載入完成後初始化
+        window.addEventListener('load', () => {
+            updateProgress(65);
+            updateClassProgress(60); // 班級進度保持60%
+        });
+        
+        // 備用初始化（以防 load 事件已經觸發）
+        setTimeout(() => {
+            updateProgress(65);
+            updateClassProgress(60);
+        }, 200);
+        
+        // 測試進度變化（演示用，實際使用時可以刪除）
+        setTimeout(() => {
+            let testProgress = 65;
+            const progressTest = setInterval(() => {
+                testProgress += 10;
+                if (testProgress > 100) {
+                    testProgress = 10;
+                }
+                updateProgress(testProgress);
+                // 左側班級進度保持獨立，不隨測試變化
+            }, 2000);
+        }, 1000);
+
 // 商店按鈕點擊效果
 const shopButton = document.querySelector('.shop-button');
 shopButton.addEventListener('click', () => {
